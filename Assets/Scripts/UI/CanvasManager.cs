@@ -10,6 +10,9 @@ public class CanvasManager : MonoBehaviour
     [SerializeField] private GameObject victoryScreen;
     [SerializeField] private GameObject gameOverScreen;
 
+    [SerializeField] private AudioClip victoryTheme;
+    [SerializeField] private AudioClip gameOverTheme;
+
     [SerializeField] private Image[] hearts;    // Make sure to put hearts in reverse order
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI finalScoreText;
@@ -20,8 +23,11 @@ public class CanvasManager : MonoBehaviour
     private float timer;
     private float countDownTimer;
 
+    private AudioSource audioSource;
+
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         countDownTimer = timeLimit;
     }
 
@@ -56,14 +62,18 @@ public class CanvasManager : MonoBehaviour
     public void Victory(float lostHealth)
     {
         Time.timeScale = 0f;
-        finalScoreText.text = "Score: " + ((int)timeLimit - (int)timer) * (0.2f * lostHealth);
+        float finalScore = ((int)timeLimit - (int)timer) * (0.2f * lostHealth);
+        Mathf.Clamp(finalScore, 0, 700);
+        finalScoreText.text = "Score: " + finalScore;
         finalTimeText.text = "Time: " + (int)timer;
+        audioSource.PlayOneShot(victoryTheme);
         victoryScreen.SetActive(true);
     }
 
     public void GameOver()
     {
         Time.timeScale = 0f;
+        audioSource.PlayOneShot(gameOverTheme);
         gameOverScreen.SetActive(true);
     }
 }

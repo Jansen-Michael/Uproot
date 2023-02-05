@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     [Header("References"), SerializeField] private WindManager windManager;
     [SerializeField] private CanvasManager canvasManager;
     [SerializeField] private Animator animator;
+    [SerializeField] private AudioClip hopEfx;
+    [SerializeField] private AudioClip hurtEfx;
 
     [Space, Header("Player Variables"), SerializeField] private int MaxHealth = 5;
     [SerializeField] private float speed = 8f;
@@ -17,7 +19,7 @@ public class Player : MonoBehaviour
     private CharacterController controller;
     private AudioSource audioSource;
 
-    private bool canMove = true;
+    private bool isHurt = false;
     private int health = 1;
     public int Health { get { return health; } }
     private float verticalSpeed;
@@ -27,7 +29,7 @@ public class Player : MonoBehaviour
         controller = GetComponent<CharacterController>();
         audioSource = GetComponent<AudioSource>();
         health = MaxHealth;
-        canMove = true;
+        isHurt = false;
     }
 
     void Update()
@@ -36,11 +38,11 @@ public class Player : MonoBehaviour
         if (controller.isGrounded)
         {
             animator.SetBool("isGrounded", true);
-            if (!canMove) { return; }
 
             if (Input.GetButtonDown("Jump"))
             {
                 verticalSpeed = jumpForce;
+                audioSource.PlayOneShot(hopEfx);
                 animator.SetBool("isJumping", true);
             }
             else
@@ -58,8 +60,6 @@ public class Player : MonoBehaviour
         // Wind Effect
         Vector3 windMovementVector = new Vector3(windManager.windIsMovingRight ? windManager.windStrength : -windManager.windStrength, 0, 0);
         controller.Move(windMovementVector * Time.deltaTime);
-
-        if (!canMove) { controller.Move(new Vector3(0, verticalSpeed * Time.deltaTime, 0)); return; }
 
         // Movement
         Vector3 movementVector = new Vector3(Input.GetAxisRaw("Horizontal") * speed, verticalSpeed, 0);
@@ -84,14 +84,15 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Hazard" && animator.GetBool("isHurt") == false)
+        if (collision.gameObject.tag == "Hazard" && isHurt == false)
         {
             collision.gameObject.GetComponent<BoxCollider>().enabled = false;
-            animator.SetBool("isHurt", true);
+            isHurt = true;
+            audioSource.PlayOneShot(hurtEfx);
 
             health -= 1;
             canvasManager.TakeDamage(health);
-            StartCoroutine(CanMove(collision));
+            StartCoroutine(CanGetHurt());
         }
 
         if (health <= 0)
@@ -102,11 +103,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    private IEnumerator CanMove(Collision collision)
+    private IEnumerator CanGetHurt()
     {
         yield return new WaitForSeconds(hitStun);
-        collision.gameObject.GetComponent<BoxCollider>().enabled = true;
-        canMove = true;
-        animator.SetBool("isHurt", false);
+        isHurt = false;
     }
 }

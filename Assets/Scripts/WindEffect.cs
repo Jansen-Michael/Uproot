@@ -16,14 +16,14 @@ public class WindEffect : MonoBehaviour
 
     void Start()
     {
-        leftScreenPoint = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height / 2));
-        rightScreenPoint = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height / 2));
-
         isActive = false;
     }
 
     void Update()
     {
+        leftScreenPoint = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height / 2));
+        rightScreenPoint = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height / 2));
+
         transform.Translate(isMovingRight ? speed * Time.deltaTime : -speed * Time.deltaTime, 0, 0);
 
         if (isMovingRight)

@@ -128,8 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exclamationPoint: {fileID: 2114279371491036648}
-  stayingTime: 0.75
-  respawnTime: 3
+  stayingTime: 0.5
+  respawnTime: 4
 --- !u!1 &2114279370949787039
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,7 +188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4078644087267722559, guid: f0e9a08cb6e8ffa4d9bd899d8864a70e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4078644087267722559, guid: f0e9a08cb6e8ffa4d9bd899d8864a70e, type: 3}
       propertyPath: m_LocalRotation.w
