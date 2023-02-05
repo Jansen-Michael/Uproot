@@ -14,6 +14,10 @@ public class WindManager : MonoBehaviour
 
     void Start()
     {
+        // Has to go first
+        startingWindStrength = windStrength; 
+        windIsMovingRight = !windIsMovingRight;
+
         StartCoroutine(ActivationCycle());
         StartCoroutine(FlipWindDirection());
 
@@ -21,8 +25,6 @@ public class WindManager : MonoBehaviour
         {
             windEffect.isMovingRight = windIsMovingRight;
         }
-
-        startingWindStrength = windStrength;
     }
 
     void Update()

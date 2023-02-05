@@ -24,11 +24,13 @@ public class FlyingEnemy : MonoBehaviour
         if (rand >= 0.5f)
         {
             transform.position = new Vector3(xSpawnPositions.x, startPos.y, startPos.z);
+            transform.rotation = Quaternion.Euler(0, 0, 0f);
             isMovingRight = true;
         }
         else
         {
             transform.position = new Vector3(xSpawnPositions.y, startPos.y, startPos.z);
+            transform.rotation = Quaternion.Euler(0, 180f, 0f);
             isMovingRight = false;
         }
     }
@@ -43,11 +45,19 @@ public class FlyingEnemy : MonoBehaviour
     {
         if (collision.gameObject.tag == "Boarder")
         {
+            transform.rotation = Quaternion.Euler(0, isMovingRight ? 180f : 0f, 0f);
+
+            if (isForeground)
+            {
+                transform.Translate(new Vector3(3.5f, 0f, isMovingRight ? 5f : -5f));
+            }
+            else
+            {
+                transform.Translate(new Vector3(3.5f, 0f, isMovingRight ? -5f : 5f));
+            }
+
             isForeground = !isForeground;
             isMovingRight = !isMovingRight;
-
-            transform.rotation = Quaternion.Euler(0, isMovingRight ? 0f : 180f, 0f);
-            transform.Translate(new Vector3(isMovingRight ? -2.5f : 2.5f, 0f, isForeground ? -5f : 5f));
         }
     }
 }

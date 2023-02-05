@@ -52,7 +52,7 @@ public class CanvasManager : MonoBehaviour
     public void Victory(float lostHealth)
     {
         Time.timeScale = 0f;
-        finalScoreText.text = "Score: " + ((timeLimit - timer) * (0.2f * lostHealth));
+        finalScoreText.text = "Score: " + (timer * (0.2f * lostHealth));
         victoryScreen.SetActive(true);
     }
 

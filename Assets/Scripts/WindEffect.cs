@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class WindEffect : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
-    [SerializeField] private Vector2 xPosLimits;
     public Image windZone;
 
     private Vector2 leftScreenPoint;

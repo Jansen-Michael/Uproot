@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     [Header("References"), SerializeField] private WindManager windManager;
     [SerializeField] private CanvasManager canvasManager;
+    [SerializeField] private Animator animator;
 
     [Space, Header("Player Variables"), SerializeField] private int MaxHealth = 5;
     [SerializeField] private float speed = 8f;
@@ -33,11 +34,13 @@ public class Player : MonoBehaviour
         // Jump
         if (controller.isGrounded)
         {
+            animator.SetBool("isGrounded", true);
             if (!canMove) { return; }
 
             if (Input.GetButtonDown("Jump"))
             {
                 verticalSpeed = jumpForce;
+                animator.SetBool("isJumping", true);
             }
             else
             {
@@ -47,6 +50,8 @@ public class Player : MonoBehaviour
         else
         {
             verticalSpeed -= gravity * 1.3f * Time.deltaTime;  // Apply gravity
+            animator.SetBool("isJumping", false);
+            animator.SetBool("isGrounded", false);
         }
 
         // Wind Effect
@@ -59,24 +64,30 @@ public class Player : MonoBehaviour
         Vector3 movementVector = new Vector3(Input.GetAxisRaw("Horizontal") * speed, verticalSpeed, 0);
         controller.Move(movementVector * Time.deltaTime);
 
-        // Rotation
+        // Rotation & Animation
         if (Input.GetAxisRaw("Horizontal") > 0)
         {
             transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+            animator.SetBool("isRunning", true);
         }
         else if (Input.GetAxisRaw("Horizontal") < 0)
         {
             transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+            animator.SetBool("isRunning", true);
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Hazard")
+        if (collision.gameObject.tag == "Hazard" && animator.GetBool("isHurt") == false)
         {
             canMove = false;
-            float randMovement = Random.Range(-5f, 5f);
-            controller.Move(new Vector3(randMovement, jumpForce, 0f));
+            animator.SetBool("isHurt", true);
+
             health -= 1;
             canvasManager.TakeDamage(health);
             StartCoroutine(CanMove());
@@ -85,6 +96,7 @@ public class Player : MonoBehaviour
         if (health <= 0)
         {
             // Death
+            animator.SetBool("isDead", true);
             canvasManager.GameOver();
         }
     }
@@ -93,5 +105,6 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(hitStun);
         canMove = true;
+        animator.SetBool("isHurt", false);
     }
 }

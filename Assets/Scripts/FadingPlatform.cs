@@ -5,14 +5,22 @@ using UnityEngine;
 public class FadingPlatform : MonoBehaviour
 {
     [SerializeField] private float timeInState = 1f;
-    private MeshRenderer meshRenderer;
+    [SerializeField] private bool tempo1 = false;
+    [SerializeField] private GameObject cloud;
     private BoxCollider boxCollider;
 
     void Start()
     {
-        meshRenderer = GetComponent<MeshRenderer>();
         boxCollider = GetComponent<BoxCollider>();
-        StartCoroutine(FadeOut());
+
+        if (tempo1)
+        {
+            StartCoroutine(FadeOut());
+        }
+        else
+        {
+            StartCoroutine(FadeIn());
+        }
     }
 
     void Update()
@@ -23,7 +31,7 @@ public class FadingPlatform : MonoBehaviour
     IEnumerator FadeIn()
     {
         yield return new WaitForSeconds(timeInState);
-        meshRenderer.enabled = true;
+        cloud.SetActive(true);
         boxCollider.enabled = true;
         StartCoroutine(FadeOut());
     }
@@ -31,7 +39,7 @@ public class FadingPlatform : MonoBehaviour
     IEnumerator FadeOut()
     {
         yield return new WaitForSeconds(timeInState);
-        meshRenderer.enabled = false;
+        cloud.SetActive(false);
         boxCollider.enabled = false;
         StartCoroutine(FadeIn());
     }
