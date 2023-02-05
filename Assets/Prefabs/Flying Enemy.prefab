@@ -127,5 +127,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2841730d7603b4c4c851688521ea5417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 250
-  xSpawnPositions: {x: -22, y: 22}
+  speed: 350
+  xSpawnPositions: {x: -17, y: 17}

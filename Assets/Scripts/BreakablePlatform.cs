@@ -6,14 +6,15 @@ public class BreakablePlatform : MonoBehaviour
 {
     [SerializeField] private float destructionTime = 1f;
     [SerializeField] private float respawnTime = 2.5f;
+    [SerializeField] private GameObject rock;
 
-    private MeshRenderer meshRenderer;
     private BoxCollider boxCollider;
+    private AudioSource audioSource;
 
     void Start()
     {
-        meshRenderer = GetComponent<MeshRenderer>();
         boxCollider = GetComponent<BoxCollider>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -31,8 +32,9 @@ public class BreakablePlatform : MonoBehaviour
 
     IEnumerator DestroyPlatform()
     {
+        audioSource.Play();
         yield return new WaitForSeconds(destructionTime);
-        meshRenderer.enabled = false;
+        rock.SetActive(false);
         boxCollider.enabled = false;
         StartCoroutine(RestorePlatform());
     }
@@ -40,7 +42,7 @@ public class BreakablePlatform : MonoBehaviour
     IEnumerator RestorePlatform()
     {
         yield return new WaitForSeconds(respawnTime);
-        meshRenderer.enabled = true;
+        rock.SetActive(true);
         boxCollider.enabled = true;
     }
 }

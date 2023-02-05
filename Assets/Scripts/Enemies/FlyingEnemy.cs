@@ -34,7 +34,6 @@ public class FlyingEnemy : MonoBehaviour
         }
     }
 
-    
     void FixedUpdate()
     {
         rb.velocity = new Vector3(isMovingRight ? speed * Time.deltaTime : -speed * Time.deltaTime, 0, 0);
@@ -57,6 +56,8 @@ public class FlyingEnemy : MonoBehaviour
 
             isForeground = !isForeground;
             isMovingRight = !isMovingRight;
+
+
         }
     }
 }
