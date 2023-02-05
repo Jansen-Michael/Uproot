@@ -13,14 +13,16 @@ public class CanvasManager : MonoBehaviour
     [SerializeField] private Image[] hearts;    // Make sure to put hearts in reverse order
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI finalScoreText;
+    [SerializeField] private TextMeshProUGUI finalTimeText;
     [SerializeField] private float timeLimit = 600f;
 
     private bool isPaused;
     private float timer;
+    private float countDownTimer;
 
     void Start()
     {
-        timer = timeLimit;
+        countDownTimer = timeLimit;
     }
 
     void Update()
@@ -30,8 +32,10 @@ public class CanvasManager : MonoBehaviour
             PauseGame();
         }
 
-        timer -= Time.deltaTime;
-        timerText.text = "Timer: " + (int)timer;
+        countDownTimer -= Time.deltaTime;
+        Mathf.Clamp(countDownTimer, 0f, 1000f);
+        timer += Time.deltaTime;
+        timerText.text = "Timer: " + (int)countDownTimer;
     }
 
     public void PauseGame()
@@ -52,7 +56,8 @@ public class CanvasManager : MonoBehaviour
     public void Victory(float lostHealth)
     {
         Time.timeScale = 0f;
-        finalScoreText.text = "Score: " + (timer * (0.2f * lostHealth));
+        finalScoreText.text = "Score: " + ((int)timeLimit - (int)timer) * (0.2f * lostHealth);
+        finalTimeText.text = "Time: " + (int)timer;
         victoryScreen.SetActive(true);
     }
 
