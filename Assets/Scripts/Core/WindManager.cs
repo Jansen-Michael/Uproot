@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class WindManager : MonoBehaviour
 {
     [SerializeField] private WindEffect[] windEffects;
+    [SerializeField] private TextMeshProUGUI warningText;
     [SerializeField] private float timeBeforeDirectionChanges = 16f;
     [SerializeField] private float timeBetweenActivations = 8f;
     public float windStrength = 1.5f;
@@ -57,7 +60,11 @@ public class WindManager : MonoBehaviour
                 windEffect.windZone.enabled = false;
                 windStrength = 0f;
             }
-            yield return new WaitForSeconds(timeBetweenActivations);
+            warningText.gameObject.SetActive(false);
+            yield return new WaitForSeconds(timeBetweenActivations - 2f);
+
+            warningText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(2f);
 
             foreach (WindEffect windEffect in windEffects)
             {
@@ -65,6 +72,7 @@ public class WindManager : MonoBehaviour
                 windEffect.windZone.enabled = true;
                 windStrength = startingWindStrength;
             }
+            warningText.gameObject.SetActive(false);
             yield return new WaitForSeconds(timeBetweenActivations);
         }
     }

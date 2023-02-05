@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed = 8f;
     [SerializeField] private float jumpForce = 2f;
     [SerializeField] private float gravity = 9.81f;
-    [SerializeField] private float hitStun = 1.5f;
+    [SerializeField] private float hitStun = 1f;
 
     private CharacterController controller;
     private AudioSource audioSource;
@@ -86,12 +86,12 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.tag == "Hazard" && animator.GetBool("isHurt") == false)
         {
-            //canMove = false;
+            collision.gameObject.GetComponent<BoxCollider>().enabled = false;
             animator.SetBool("isHurt", true);
 
             health -= 1;
             canvasManager.TakeDamage(health);
-            StartCoroutine(CanMove());
+            StartCoroutine(CanMove(collision));
         }
 
         if (health <= 0)
@@ -102,9 +102,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    private IEnumerator CanMove()
+    private IEnumerator CanMove(Collision collision)
     {
         yield return new WaitForSeconds(hitStun);
+        collision.gameObject.GetComponent<BoxCollider>().enabled = true;
         canMove = true;
         animator.SetBool("isHurt", false);
     }

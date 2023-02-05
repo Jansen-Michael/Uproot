@@ -4,47 +4,58 @@ using UnityEngine;
 
 public class SpikeEnemy : MonoBehaviour
 {
-    [SerializeField] private GameObject spikeBall;
-    [SerializeField] private Transform landZone;
+    //[SerializeField] private Transform spawnPosition;
     [SerializeField] private GameObject exclamationPoint;
-    [SerializeField] private float spikeBallSpeed = 10f;
     [SerializeField] private float stayingTime = 1f;
     [SerializeField] private float respawnTime = 2.5f;
 
-    private bool canFall = false;
+    private MeshRenderer meshRenderer;
+    private BoxCollider boxCollider;
+    private Rigidbody rb;
     private Vector3 spikeBallStartPos;
 
     void Start()
     {
-        spikeBallStartPos = spikeBall.transform.position;
+        meshRenderer = GetComponent<MeshRenderer>();
+        boxCollider = GetComponent<BoxCollider>();
+        rb = GetComponent<Rigidbody>();
+
+        spikeBallStartPos = transform.position;
     }
 
     void Update()
     {
-        float distanceToLandZone = Vector3.Distance(spikeBall.transform.position, landZone.position);
-
-        if (distanceToLandZone > 0.05f && canFall) 
-        {
-            spikeBall.transform.Translate(new Vector3(0f, -spikeBallSpeed * Time.deltaTime, 0f));
-        }
-        else
-        {
-            StartCoroutine(HitLandingZone());
-        }
+        
     }
 
     IEnumerator HitLandingZone()
     {
         exclamationPoint.SetActive(false);
-        canFall = false;
         yield return new WaitForSeconds(stayingTime);
 
-        spikeBall.transform.position = spikeBallStartPos;
-        spikeBall.SetActive(false);
+        rb.useGravity = false;
+        meshRenderer.enabled = false;
+        boxCollider.enabled = false;
         yield return new WaitForSeconds(respawnTime);
 
-        spikeBall.SetActive(true);
-        canFall = true;
+        transform.position = spikeBallStartPos;
+        rb.useGravity = true;
+        meshRenderer.enabled = true;
+        boxCollider.enabled = true;
         exclamationPoint.SetActive(true);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            meshRenderer.enabled = false;
+            boxCollider.enabled = false;
+            StartCoroutine(HitLandingZone());
+        }
+        else
+        {
+            StartCoroutine(HitLandingZone());
+        }
     }
 }

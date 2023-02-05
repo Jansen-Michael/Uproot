@@ -23,13 +23,13 @@ public class FlyingEnemy : MonoBehaviour
         if (rand >= 0.5f)
         {
             transform.position = new Vector3(xSpawnPositions.x, startPos.y, startPos.z);
-            transform.rotation = Quaternion.Euler(0, 0, 0f);
+            transform.rotation = Quaternion.Euler(0, 180f, 0f);
             isMovingRight = true;
         }
         else
         {
             transform.position = new Vector3(xSpawnPositions.y, startPos.y, startPos.z);
-            transform.rotation = Quaternion.Euler(0, 180f, 0f);
+            transform.rotation = Quaternion.Euler(0, 0f, 0f);
             isMovingRight = false;
         }
     }

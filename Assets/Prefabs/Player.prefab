@@ -112,7 +112,7 @@ MonoBehaviour:
   speed: 8
   jumpForce: 20
   gravity: 30
-  hitStun: 1.5
+  hitStun: 0.35
 --- !u!1001 &3169284309321039215
 PrefabInstance:
   m_ObjectHideFlags: 0
